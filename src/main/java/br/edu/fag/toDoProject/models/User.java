@@ -1,5 +1,6 @@
 package br.edu.fag.toDoProject.models;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.Column;
@@ -7,23 +8,30 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
+
 @Entity
 @Table(name = User.TABLE_NAME)
 public class User {
 
-    //Interface para garantir que o @NotNull e @NotEmpty estão sendo aplicados
+    // Interface para garantir que o @NotNull e @NotEmpty estão sendo aplicados
     public interface CreateUser {
     }
+
     public interface UpdateUser {
     }
 
-    //Define o nome da tabela como "user"
+    // Define o nome da tabela como "user"
+
     public static final String TABLE_NAME = "user";
 
     @Id
@@ -37,14 +45,16 @@ public class User {
     @Size(groups = CreateUser.class, min = 2, max = 100)
     private String username;
 
-    @NotNull(groups = {CreateUser.class, UpdateUser.class})
-    @NotEmpty(groups = {CreateUser.class, UpdateUser.class})
-    @Size(groups = {CreateUser.class, UpdateUser.class}, min = 6, max = 60)
+    @JsonProperty(access = Access.WRITE_ONLY)
     @Column(name = "password", length = 60, nullable = false)
+    @NotNull(groups = { CreateUser.class, UpdateUser.class })
+    @NotEmpty(groups = { CreateUser.class, UpdateUser.class })
+    @Size(groups = { CreateUser.class, UpdateUser.class }, min = 6, max = 60)
     private String password;
 
-    // private List<Task> tasks = new ArrayList<Task>();
-    
+    @OneToMany(mappedBy = "user")
+    private List<Task> tasks = new ArrayList<Task>();
+
     public User() {
     }
 
@@ -80,11 +90,11 @@ public class User {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj == null) 
+        if (obj == null)
             return false;
-        if(obj == this)
+        if (obj == this)
             return true;
-        if (! (obj instanceof User))
+        if (!(obj instanceof User))
             return false;
         User other = (User) obj;
         if (this.id == null)
@@ -93,8 +103,8 @@ public class User {
             else if (!this.id.equals(other.id))
                 return false;
         return Objects.equals(this.id, other.id) && Objects.equals(this.username, other.username)
-        && Objects.equals(this.password, other.password);
-        
+                && Objects.equals(this.password, other.password);
+
     }
 
     @Override
@@ -104,4 +114,13 @@ public class User {
         result = prime * result + (this.id == null ? 0 : this.id.hashCode());
         return result;
     }
+
+    public List<Task> getTasks() {
+        return this.tasks;
+    }
+
+    public void setTasks(List<Task> tasks) {
+        this.tasks = tasks;
+    }
+
 }
