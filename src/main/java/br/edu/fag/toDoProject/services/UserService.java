@@ -16,6 +16,9 @@ import br.edu.fag.toDoProject.repositories.UserRepository;
 public class UserService {
 
     @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
     private TaskRepository taskRepository;
 
     public User findById(Long id) {
