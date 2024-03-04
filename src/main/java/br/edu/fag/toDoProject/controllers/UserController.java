@@ -2,7 +2,6 @@ package br.edu.fag.toDoProject.controllers;
 
 import java.net.URI;
 
-import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -31,7 +29,7 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @GetMapping("/(id)")
+    @GetMapping("/{id}")
     public ResponseEntity<User> findById(@PathVariable Long id) {
         User obj = this.userService.findById(id);
         return ResponseEntity.ok().body(obj);
@@ -42,11 +40,11 @@ public class UserController {
     public ResponseEntity<Void> create(@Valid @RequestBody User obj) {
         this.userService.create(obj);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
-            .path("/(id)").buildAndExpand(obj.getId()).toUri();
+            .path("/{id}").buildAndExpand(obj.getId()).toUri();
         return ResponseEntity.created(uri).build();
     }
 
-    @PutMapping("/(id)")
+    @PutMapping("/{id}")
     @Validated(UpdateUser.class)
     public ResponseEntity<Void> update(@Valid @RequestBody User obj, @PathVariable Long id) {
         obj.setId(id);
@@ -54,7 +52,7 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("/(id)")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         this.userService.delete(id);
         return ResponseEntity.noContent().build();
