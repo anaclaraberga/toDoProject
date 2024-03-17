@@ -1,4 +1,4 @@
-package br.edu.fag.toDoProject.services.exceptions;
+package br.edu.fag.toDoProject.exceptions;
 
 import java.io.IOException;
 
@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import br.edu.fag.toDoProject.services.exceptions.ObjectNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j(topic = "GLOBAL_EXCEPTION_HANDLER")
@@ -57,7 +58,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(DataIntegrityViolationException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
-    public ResponseEntity<Object> handleDataIntegrityViolationExceptio(
+    public ResponseEntity<Object> handleDataIntegrityViolationException(
         DataIntegrityViolationException dataIntegrityViolationException,
         WebRequest request
     ) {
@@ -69,6 +70,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         request);
     }
 
+    @ExceptionHandler(ConstraintViolationException.class)
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
     public ResponseEntity<Object> handleConstrainViolationException(
         ConstraintViolationException constraintViolationException,
         WebRequest request
@@ -77,6 +80,29 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return buildErrorResponse(constraintViolationException,
         HttpStatus.UNPROCESSABLE_ENTITY,
         request);
+    }
+
+    //Exception para quando não encontra o usuário
+    @ExceptionHandler(ObjectNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ResponseEntity<Object> handleObjectNotFOundException(
+        ObjectNotFoundException objectNotFoundException,
+        WebRequest request
+    ) {
+        log.error("Failed to find the request elements", objectNotFoundException);
+        return buildErrorResponse(
+            objectNotFoundException,
+            HttpStatus.NOT_FOUND,
+            request 
+        );
+    }
+
+    private ResponseEntity<Object> buildErrorResponse(
+        Exception exception,
+        HttpStatus httpStatus,
+        WebRequest request
+    ) {
+        return buildErrorResponse(exception, exception.getMessage(), httpStatus, request);
     }
 
     private ResponseEntity<Object> buildErrorResponse(

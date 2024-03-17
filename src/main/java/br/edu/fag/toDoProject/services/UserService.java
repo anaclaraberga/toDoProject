@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import br.edu.fag.toDoProject.models.User;
 import br.edu.fag.toDoProject.repositories.TaskRepository;
 import br.edu.fag.toDoProject.repositories.UserRepository;
+import br.edu.fag.toDoProject.services.exceptions.ObjectNotFoundException;
 
 @Service
 public class UserService {
@@ -21,7 +22,7 @@ public class UserService {
 
     public User findById(Long id) {
         Optional<User> user = this.userRepository.findById(id);
-        return user.orElseThrow(() -> new RuntimeException(
+        return user.orElseThrow(() -> new ObjectNotFoundException(
             "Usuário não encontrado! Id: " + id + ", Tipos: " + User.class.getName()
         ));
     }

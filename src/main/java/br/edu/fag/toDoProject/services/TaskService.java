@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import br.edu.fag.toDoProject.models.Task;
 import br.edu.fag.toDoProject.models.User;
 import br.edu.fag.toDoProject.repositories.TaskRepository;
+import br.edu.fag.toDoProject.services.exceptions.ObjectNotFoundException;
 
 @Service
 public class TaskService {
@@ -22,7 +23,7 @@ public class TaskService {
 
     public Task findById(Long id) {
         Optional<Task> task = this.taskRepository.findById(id);
-        return task.orElseThrow(() -> new RuntimeException(
+        return task.orElseThrow(() -> new ObjectNotFoundException(
                 "Tarefa não encontrada! Id: " + id + "Tipo: " + Task.class.getName()));
     }
 
