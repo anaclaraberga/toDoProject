@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import br.edu.fag.toDoProject.models.User;
 import br.edu.fag.toDoProject.repositories.TaskRepository;
 import br.edu.fag.toDoProject.repositories.UserRepository;
+import br.edu.fag.toDoProject.services.exceptions.DataBindingViolationException;
 import br.edu.fag.toDoProject.services.exceptions.ObjectNotFoundException;
 
 @Service
@@ -46,7 +47,7 @@ public class UserService {
         try {
             this.userRepository.deleteById(id);
         } catch (Exception e) {
-            throw new RuntimeException("Não é possível excluir pois há entidades relacionadas.");
+            throw new DataBindingViolationException("Não é possível excluir pois há entidades relacionadas.");
         }
     }
 }

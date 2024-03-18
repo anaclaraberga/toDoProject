@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import br.edu.fag.toDoProject.models.Task;
 import br.edu.fag.toDoProject.models.User;
 import br.edu.fag.toDoProject.repositories.TaskRepository;
+import br.edu.fag.toDoProject.services.exceptions.DataBindingViolationException;
 import br.edu.fag.toDoProject.services.exceptions.ObjectNotFoundException;
 
 @Service
@@ -53,7 +54,7 @@ public class TaskService {
         try {
             this.taskRepository.deleteById(id);
         } catch (Exception e) {
-            throw new RuntimeException("Não é possível deletar pois há entidades relacionadas");
+            throw new DataBindingViolationException("Não é possível deletar pois há entidades relacionadas");
         }
     }
 }
