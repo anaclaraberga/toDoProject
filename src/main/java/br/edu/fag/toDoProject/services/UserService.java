@@ -1,12 +1,15 @@
 package br.edu.fag.toDoProject.services;
 
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.edu.fag.toDoProject.models.User;
+import br.edu.fag.toDoProject.models.enums.ProfileEnum;
 import br.edu.fag.toDoProject.repositories.TaskRepository;
 import br.edu.fag.toDoProject.repositories.UserRepository;
 import br.edu.fag.toDoProject.services.exceptions.DataBindingViolationException;
@@ -31,6 +34,7 @@ public class UserService {
     @Transactional
     public User create(User obj) {
         obj.setId(null);
+        obj.setProfiles(Stream.of(ProfileEnum.USER.getCode()).collect(Collectors.toSet()));
         obj = this.userRepository.save(obj);
         this.taskRepository.saveAll(obj.getTasks());
         return obj;
