@@ -9,10 +9,8 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import br.edu.fag.toDoProject.models.enums.ProfileEnum;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @NoArgsConstructor
 @Getter
@@ -48,6 +46,10 @@ public class UserSpringSecurity implements UserDetails{
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public boolean hasRole(ProfileEnum profileEnum) {
+        return getAuthorities().contains(new SimpleGrantedAuthority(profileEnum.getDescription()));
     }
     
 }
