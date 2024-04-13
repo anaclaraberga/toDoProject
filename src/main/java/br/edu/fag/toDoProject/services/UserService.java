@@ -9,11 +9,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.edu.fag.toDoProject.models.User;
+import br.edu.fag.toDoProject.models.dto.UserCreateDTO;
+import br.edu.fag.toDoProject.models.dto.UserUpdateDTO;
 import br.edu.fag.toDoProject.models.enums.ProfileEnum;
 import br.edu.fag.toDoProject.repositories.TaskRepository;
 import br.edu.fag.toDoProject.repositories.UserRepository;
 import br.edu.fag.toDoProject.services.exceptions.DataBindingViolationException;
 import br.edu.fag.toDoProject.services.exceptions.ObjectNotFoundException;
+import jakarta.validation.Valid;
 
 @Service
 public class UserService {
@@ -53,5 +56,19 @@ public class UserService {
         } catch (Exception e) {
             throw new DataBindingViolationException("Não é possível excluir pois há entidades relacionadas.");
         }
+    }
+
+    public User fromDTO(@Valid UserCreateDTO obj) {
+        User user = new User();
+        user.setUsername(obj.getUsername());
+        user.setPassword(obj.getPassword());
+        return user;
+    }
+
+    public User fromDTO(@Valid UserUpdateDTO obj) {
+        User user = new User();
+        user.setId(obj.getId());
+        user.setPassword(obj.getPassword());
+        return user;
     }
 }

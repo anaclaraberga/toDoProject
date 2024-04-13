@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.edu.fag.toDoProject.models.User;
-import br.edu.fag.toDoProject.models.User.CreateUser;
-import br.edu.fag.toDoProject.models.User.UpdateUser;
+import br.edu.fag.toDoProject.models.dto.UserCreateDTO;
+import br.edu.fag.toDoProject.models.dto.UserUpdateDTO;
 import br.edu.fag.toDoProject.services.UserService;
 import jakarta.validation.Valid;
 
@@ -36,19 +36,20 @@ public class UserController {
     }
 
     @PostMapping
-    @Validated(CreateUser.class)
-    public ResponseEntity<Void> create(@Valid @RequestBody User obj) {
-        this.userService.create(obj);
+    public ResponseEntity<Void> create(@Valid @RequestBody UserCreateDTO obj) {
+        User user = this.userService.fromDTO(obj);
+
+        User newUser = this.userService.create(user);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
-            .path("/{id}").buildAndExpand(obj.getId()).toUri();
+            .path("/{id}").buildAndExpand(newUser.getId()).toUri();
         return ResponseEntity.created(uri).build();
     }
 
     @PutMapping("/{id}")
-    @Validated(UpdateUser.class)
-    public ResponseEntity<Void> update(@Valid @RequestBody User obj, @PathVariable Long id) {
+    public ResponseEntity<Void> update(@Valid @RequestBody UserUpdateDTO obj, @PathVariable Long id) {
         obj.setId(id);
-        this.userService.update(obj);
+        User user = this.userService.fromDTO(obj);
+        this.userService.update(user);
         return ResponseEntity.noContent().build();
     }
 

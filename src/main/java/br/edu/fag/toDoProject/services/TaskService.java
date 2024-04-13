@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.edu.fag.toDoProject.models.Task;
 import br.edu.fag.toDoProject.models.User;
+import br.edu.fag.toDoProject.models.projection.TaskProjection;
 import br.edu.fag.toDoProject.repositories.TaskRepository;
 import br.edu.fag.toDoProject.services.exceptions.DataBindingViolationException;
 import br.edu.fag.toDoProject.services.exceptions.ObjectNotFoundException;
@@ -28,8 +29,8 @@ public class TaskService {
                 "Tarefa não encontrada! Id: " + id + "Tipo: " + Task.class.getName()));
     }
 
-    public List<Task> findAllByUserId(Long userId) {
-        List<Task> tasks = this.taskRepository.findByUser_Id(userId);
+    public List<TaskProjection> findAllByUserId(Long userId) {
+        List<TaskProjection> tasks = this.taskRepository.findByUser_Id(userId);
         return tasks;
     }
 

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.edu.fag.toDoProject.models.Task;
+import br.edu.fag.toDoProject.models.projection.TaskProjection;
 import br.edu.fag.toDoProject.services.TaskService;
 import br.edu.fag.toDoProject.services.UserService;
 import jakarta.validation.Valid;
@@ -63,9 +64,9 @@ public class TaskController {
     }
 
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<Task>> findAllByUserId(@PathVariable Long userId) {
+    public ResponseEntity<List<TaskProjection>> findAllByUserId(@PathVariable Long userId) {
         userService.findById(userId);
-        List<Task> objs = this.taskService.findAllByUserId(userId);
+        List<TaskProjection> objs = this.taskService.findAllByUserId(userId);
         return ResponseEntity.ok().body(objs);
     }
 }
